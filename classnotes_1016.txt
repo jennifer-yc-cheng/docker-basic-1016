@@ -1,0 +1,88 @@
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+
+to kill process:
+sudo kill -9 10565
+
+確認docker 有安裝成功
+docker --version
+
+架 apache or nginx
+
+傳統: 
+cd /etc 然後在裡面找到相對應服務 然後做設定
+但是我們要做的是用!!
+下載 nginx 版本 alpine (輕量版)
+> sudo docker pull nginx:alpine
+
+看下載下來的images
+可以把images 想像成檔案
+> sudo docker images
+
+任何容器都是從一個image來的
+-p host-port:container-port
+要執行一個容器 容器名字是myweb hostport8080對應容器80port image用nginx:alpine
+> sudo docker run -d --name myweb -p 8080:80 nginx:alpine
+
+看看container process
+> sudo docker ps
+
+火狐上面看
+http://127.0.0.1:8080 << 這就會去看container 裡面的80 port
+
+進去 container
+>> sudo docker exec -it myweb sh
+>> vi /usr/share/nginx/html/index.html
+
+extension > download "Remote development"
+ubuntu > sudo apt install openssh-sever -y
+ubuntu > sudo systemctl status ssh
+
+vscode > find >< ubuntu@192.168.12.128
+Linux
+ubuntu (password)
+
+連線 github
+github.com
+
+Dockerfile 編輯image
+FROM python:3.12-slim       # 基底映像檔
+
+WORKDIR /app                # 切換到 /app 的意思 等同 cd /app
+                            # 切換 此IMAGE 的目錄
+COPY app.py ./              # COPY app.py 到目前的目錄底下
+                            # app.py from 宿主機 到 此IMAGE 的/app 
+EXPOSE 8000                 # 要開放哪個port 跟 實體機去串接
+
+CMD ["python", "app.py"]    # 這個容器一開機的時候第一個執行的指令是什麼
+                            # = python app.py 用 python 去執行 app.py
+
+# -t 標籤
+# 最後面的點 是 under current directory 的意思
+ubuntu > sudo docker build -t myweb:1.0 .
+ubuntu > sudo docker images
+
+# 剛剛用nginx:alpine, 現在要用現在這個image
+# port host:container 8088:8000
+ubuntu > sudo docker run -d --name pyweb -p 8088:8000 myweb:1.0
+
+# remove container
+ubuntu > sudo docker rm -f pyweb
+ubuntu > sudo docker ps
+# remove image
+ubuntu > sudo docker rmi myweb:1.0
+ubuntu > sudo docker images
