@@ -1,0 +1,26 @@
+使用別人的docker image (這裡使用老師的)
+> sudo docker run -d --name testweb -p 8080:8000 jlhsu666/myweb:1.1
+
+check that it works using firefox
+127.0.0.1:8080
+
+建立一個容器的區域網路
+> sudo docker network create mynet
+
+建立一個資料卷宗的容器
+> sudo docker volume create pgdata
+
+查看 pgdadta 資料卷宗的相關內容
+> sudo docker volume inspect pgdata
+
+[
+    {
+        "CreatedAt": "2026-11-06T16:41:03+08:00",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/pgdata/_data",
+        "Name": "pgdata",
+        "Options": null,
+        "Scope": "local"
+    }
+]
