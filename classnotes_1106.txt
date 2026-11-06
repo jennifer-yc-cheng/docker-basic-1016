@@ -41,3 +41,15 @@ mypg 就會消失
 > sudo docker run -d --name mypg2 --network mynet -e POSTGRES_PASSWORD=secret -v pgdata:/var/lib/postgresql/data postgres:16-alpine
 > sudo docker run -it --rm --network mynet -e PGPASSWORD=secret postgres:16-alpine psql -h mypg2 -U postgres -c "SELECT * FROM t;"
 
+待整理筆記
+> git clone https://github.com/jennifer-yc-cheng/docker-basic-1016.git
+> ls -al
+> cd docker-basic-1016/
+> ls
+> cat Dockerfile 
+> sudo docker build -t myweb:1.0 .
+> sudo docker images
+> sudo docker login
+> sudo docker tag myweb:1.0 yearafter/myweb:1.0
+> sudo docker push yearafter/myweb:1.0
+
