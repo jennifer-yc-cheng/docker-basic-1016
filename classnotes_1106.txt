@@ -24,3 +24,20 @@ check that it works using firefox
         "Scope": "local"
     }
 ]
+
+hub.docker.com/_/postgres
+
+> sudo docker run -d --name mypg --network mynet -e POSTGRES_PASSWORD=secret -v pgdata:/var/lib/postgresql/data postgres:16-alpine
+> sudo docker run -it --rm --network mynet -e PGPASSWORD=secret postgres:16-alpine psql -h mypg -U postgres -c "CREATE TABLE t(id INT); INSERT INTO t VALUES (42);"
+CREATE TABLE
+INSERT 0 1
+
+> sudo docker ps
+> sudo docker rm -f mypg
+> sudo docker ps
+mypg 就會消失
+
+應該還是要能查詢到剛剛insert 進去的 42
+> sudo docker run -d --name mypg2 --network mynet -e POSTGRES_PASSWORD=secret -v pgdata:/var/lib/postgresql/data postgres:16-alpine
+> sudo docker run -it --rm --network mynet -e PGPASSWORD=secret postgres:16-alpine psql -h mypg2 -U postgres -c "SELECT * FROM t;"
+
