@@ -1,0 +1,69 @@
+files ran:
+docker install.txt
+docker volume.txt
+
+sudo docker run -d --name mysite -p 8080:80 -v "$(pwd)/site:/usr/share/nginx/html:ro" nginx:alpine
+-> -v = 資料容器
+-> pwd = present working directory?
+-> 比實體機 目前實體資料夾site 去對應到 /usr/share/nginx/html
+-> nginx 反向代理伺服器
+
+
+===== 有更新的話, 就要rebuild image
+FROM python:3.12-slim
+
+WORKDIR /app               # = change directory
+                         
+COPY app.py ./             # 把 app.py 直接寫到image 裡頭
+                            
+EXPOSE 8000               
+
+CMD ["python", "app.py"]   
+
+==== yaml
+services:
+    web:
+        build: ./web 最重要的就是DockerFile, 告訴他放在哪裡 這是自己建的
+        ports:
+          - "8080:8000" 本機開 8080, container 開 8000
+        environment:
+          - REDIS_HOST=redis
+        depends_on:
+          - redis 
+    redis: 這是另外一個容器
+      images: redis:7-alpine 這是去網上拉的
+      volumes: 容器
+        - redis-data: /data 掛redis-data這個資料容器在container跟目錄底下的data
+
+volumes: (資料容器, 網路容器都是在最下面宣告的)
+  redis-data: 
+
+==== DockerFile
+FROM python:3.12-slim
+WORKDIR /app 切換到根目錄底下的app
+COPY requirements.txt ./ 拷貝實體目錄裡面的requirements.txt 到 根目錄底下
+                         requirements.txt 會紀錄要安裝哪些對應套件
+RUN pip install --no-cache-dir -r requirements.txt 直接安裝python需要的對應套件不用從硬碟裡面去找
+
+COPY app.py ./
+EXPOSE 8000
+CMD     這個image 一帶入記憶體 變成container 之後, 第一道要執行的指令就是 python app.py
+
+==== requirements.txt 
+放在跟Dockerfile 一個層級
+redis>=5.0
+
+=== copy 老師給的 app.py
+
+1. 確認路徑
+> cd compose/
+> sudo docker ps 
+> sudo docker rm -f mysite // 強制關閉 mysite, 因為也是使用8080 port
+> sudo docker compose config
+> sudo docker compose up -d --build
+
+
+
+
+
+                           
