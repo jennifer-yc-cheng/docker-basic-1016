@@ -1,0 +1,10 @@
+docker pull nginx:alpine
+sudo docker images
+sudo docker run -d --name myweb -p 8080:80 nginx:alpine
+
+#Ubuntu 
+sudo apt install openssh-server -y
+ip addr
+
+
+sudo docker build -t myweb:1.0 .

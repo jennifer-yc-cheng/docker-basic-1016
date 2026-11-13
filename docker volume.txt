@@ -1,0 +1,8 @@
+docker network create mynet
+docker volume create pgdata
+docker run -d --name mypg --network mynet -e POSTGRES_PASSWORD=secret -v pgdata:/var/lib/postgresql/data postgres:16-alpine
+docker run -it --rm --network mynet -e PGPASSWORD=secret postgres:16-alpine psql -h mypg -U postgres -c "CREATE TABLE t(id INT); INSERT INTO t VALUES (42);"
+docker rm -f mypg
+docker run -d --name mypg2 --network mynet -e POSTGRES_PASSWORD=secret -v pgdata:/var/lib/postgresql/data postgres:16-alpine
+docker run -it --rm --network mynet -e PGPASSWORD=secret postgres:16-alpine psql -h mypg2 -U postgres -c "SELECT * FROM t;"
+
