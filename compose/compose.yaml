@@ -1,0 +1,16 @@
+services:
+  web:
+    build: ./web
+    ports:
+      - "8080:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis 
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data: /data
+volumes:
+  redis-data: 
