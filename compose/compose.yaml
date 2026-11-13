@@ -11,6 +11,6 @@ services:
   redis:
     image: redis:7-alpine
     volumes:
-      - redis-data: /data
+      - redis-data:/data
 volumes:
   redis-data: 
